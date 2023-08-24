@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/assets.dart';
+import 'package:netflix_clone/screens/home.dart';
 
 class ContentBar extends StatelessWidget {
   final double scrollOffset;
@@ -27,11 +28,10 @@ class ContentBar extends StatelessWidget {
                   const Spacer(),
                   _AppBarButton("Movies", () {}),
                   const Spacer(),
-                  // _AppBarButton('My List', () async {
-                  //   await showDialog(
-                  //       context: context,
-                  //       builder: (context) => const WatchlistScreen());
-                  // }),
+                  _AppBarButton('My List', () async {
+                    await showDialog(
+                        context: context, builder: (context) => HomeScreen());
+                  }),
                 ],
               ),
             ),

@@ -1,34 +1,76 @@
 class Movie {
   String title;
   String backDropPath;
-  String originalTitle;
   String overview;
   String posterPath;
-  String releaseDate;
+  DateTime releaseDate;
   double voteAverage;
+  double durationMinutes;
+  String ageRestriction;
+  List<String> genres;
+  List<String> cast;
+  List<String> tags;
+  double trendingIndex;
 
-  Movie({
-    required this.title,
-    required this.backDropPath,
-    required this.originalTitle,
-    required this.overview,
-    required this.posterPath,
-    required this.releaseDate,
-    required this.voteAverage,
-  });
+  Movie(
+      {required this.title,
+      required this.backDropPath,
+      required this.overview,
+      required this.posterPath,
+      required this.releaseDate,
+      required this.voteAverage,
+      required this.durationMinutes,
+      required this.ageRestriction,
+      required this.genres,
+      required this.cast,
+      required this.tags,
+      required this.trendingIndex});
 
-  factory Movie.fromJson(Map<String, dynamic> json) {
-    return Movie(
-        title: json['title'],
-        backDropPath: json['backdrop_path'],
-        originalTitle: json['original_title'],
-        overview: json['overview'],
-        posterPath: json['poster_path'],
-        releaseDate: json['release_date'],
-        voteAverage: json['vote_average']);
-  }
+  // factory Movie.fromJson(Map<String, dynamic> json) {
+  //   // Convert genre IDs to corresponding genre names
+  //   // final List<int> genreIds = List<int>.from(json['genre_ids']);
+  //   // final List<String> genres = genreIds
+  //   //     .map((genreId) => _genre.entries.firstWhere(
+  //   //         (entry) => entry.value == genreId,
+  //   //         orElse: () => MapEntry("", -1)))
+  //   //     .where((entry) => entry.key.isNotEmpty)
+  //   //     .map((entry) => entry.key)
+  //   //     .toList();
+
+  //   return Movie(
+  //     title: json['title'],
+  //     backDropPath: json['backdrop_path'],
+  //     overview: json['overview'],
+  //     posterPath: json['poster_path'],
+  //     releaseDate: json['release_date'],
+  //     voteAverage: (json['vote_average'] as num).toDouble(),
+  //     // genres: genres,
+  //     // durationMinutes: json['runtime'],
+  //   );
+  // }
 }
 
+final Map<String, int> _genre = {
+  'Action': 28,
+  'Adventure': 12,
+  'Animation': 16,
+  'Comedy': 35,
+  'Crime': 80,
+  'Documentary': 99,
+  'Drama': 18,
+  'Family': 10751,
+  'Fantasy': 14,
+  'History': 36,
+  'Horror': 27,
+  'Music': 10402,
+  'Mystery': 9648,
+  'Romance': 10749,
+  'Science Fiction': 878,
+  'TV Movie': 10770,
+  'Thriller': 53,
+  'War': 10752,
+  'Western': 37,
+};  
 
 
     //   "adult": false,

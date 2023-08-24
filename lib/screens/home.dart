@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/api/api.dart';
+import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/widgets/contentbar.dart';
 import 'package:netflix_clone/widgets/contentheader.dart';
 import 'package:netflix_clone/widgets/contentlist.dart';
@@ -14,8 +16,11 @@ class _HomeScreenState extends State<HomeScreen> {
   ScrollController _scrollController =
       ScrollController(initialScrollOffset: 0.0);
 
+  late Future<List<Movie>> trendingMovies;
+
   @override
   void initState() {
+    trendingMovies = Api.getTrendingMovies(20);
     _scrollController = ScrollController()
       ..addListener(() {
         setState(() {
@@ -35,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
       appBar: PreferredSize(
         preferredSize: Size(screenSize.width, 70.0),
         child: ContentBar(
