@@ -57,6 +57,7 @@ class ContentList extends StatelessWidget {
                             child: Image.network(
                               movie.posterPath,
                               fit: BoxFit.cover,
+                              filterQuality: FilterQuality.high,
                             )),
                       );
                     },

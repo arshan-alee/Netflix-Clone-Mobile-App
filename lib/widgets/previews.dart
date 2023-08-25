@@ -60,10 +60,9 @@ class Previews extends StatelessWidget {
                             border: Border.all(
                                 color: Colors.white.withAlpha(40), width: 4.0),
                             image: DecorationImage(
-                              image: NetworkImage(movie.posterPath),
-                              fit: BoxFit
-                                  .cover, // This will maintain the aspect ratio and fit the image inside the circle
-                            ),
+                                image: NetworkImage(movie.posterPath),
+                                fit: BoxFit.cover,
+                                filterQuality: FilterQuality.high),
                           ),
                         ));
                   },

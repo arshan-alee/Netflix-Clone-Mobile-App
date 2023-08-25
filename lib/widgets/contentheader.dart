@@ -34,9 +34,9 @@ class ContentHeader extends StatelessWidget {
                     end: Alignment.topCenter,
                   ),
                   image: DecorationImage(
-                    image: NetworkImage(movies[14].backDropPath),
-                    fit: BoxFit.cover,
-                  ),
+                      image: NetworkImage(movies[14].backDropPath),
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.high),
                 ),
               ),
               Positioned(

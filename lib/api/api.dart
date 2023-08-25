@@ -9,6 +9,8 @@ class Api {
       "https://api.themoviedb.org/3/trending/movie/day?api_key=${Constants.api_key}";
   static final String _popularUrl =
       'https://api.themoviedb.org/3/movie/popular?api_key=${Constants.api_key}';
+  static final String _topRatedUrl =
+      'https://api.themoviedb.org/3/movie/top_rated?api_key=${Constants.api_key}';
   static final String _nowPlayingUrl =
       'https://api.themoviedb.org/3/movie/now_playing?api_key=${Constants.api_key}';
   static final String _upcomingUrl =
@@ -49,6 +51,25 @@ class Api {
     }
     print(nowPlayingMovies);
     return nowPlayingMovies;
+  }
+
+  static Future<List<Movie>> getTopRatedMovies(int pageCount) async {
+    List<Movie> topRatedMovies = [];
+
+    for (int page = 1; page <= pageCount; page++) {
+      final moviesResponse =
+          await http.get(Uri.parse('${_topRatedUrl}&page=${page}'));
+
+      final moviesData = json.decode(moviesResponse.body)['results'] as List;
+      print("movie data for page${page}:  ${moviesData}");
+
+      for (final movieData in moviesData) {
+        final movie = await _fetchMovieDetails(movieData);
+        topRatedMovies.add(movie);
+      }
+    }
+    print(topRatedMovies);
+    return topRatedMovies;
   }
 
   static Future<List<Movie>> getPopularMovies(int pageCount) async {

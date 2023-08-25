@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> trendingMovies;
   late Future<List<Movie>> upComingMovies;
   late Future<List<Movie>> nowPlayingMovies;
+  late Future<List<Movie>> topRatedMovies;
   late Future<List<Movie>> popularMovies;
 
   @override
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     upComingMovies = Api.getUpcomingMovies(1);
     nowPlayingMovies = Api.getNowPlayingMovies(1);
     popularMovies = Api.getPopularMovies(1);
+    topRatedMovies = Api.getTopRatedMovies(1);
     _scrollController = ScrollController()
       ..addListener(() {
         setState(() {
@@ -90,6 +92,15 @@ class _HomeScreenState extends State<HomeScreen> {
               child: ContentList(
                 title: 'Upcoming',
                 movies: upComingMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top Rated',
+                movies: topRatedMovies,
               ),
             ),
           ),
