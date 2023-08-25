@@ -1,82 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/movie.dart';
 
 class Previews extends StatelessWidget {
-  const Previews({super.key});
+  final Future<List<Movie>> trendingMovies;
+
+  Previews({Key? key, required this.trendingMovies}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 30.0),
-          child: Text(
-            'Popular this week',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0),
-          ),
-        ),
-        SizedBox(
-          height: 165.0,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: dummyData.length,
-              itemBuilder: (BuildContext context, int index) {
-                final DummyEntry entry = dummyData[index];
+    return FutureBuilder<List<Movie>>(
+      future: trendingMovies,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show a loading indicator while waiting
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData) {
+          return Text('No data available');
+        } else {
+          List<Movie> movies = snapshot.data!;
 
-                return GestureDetector(
-                  onTap: () {
-                    // Handle onTap if needed
-                  },
-                  child: _renderStack(entry),
-                );
-              }),
-        ),
-      ],
-    );
-  }
-
-  Widget _renderStack(DummyEntry entry) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          height: 130,
-          width: 130,
-          decoration: BoxDecoration(
-            color: Colors.grey, // Replace with your color
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withAlpha(40), width: 4.0),
-          ),
-          child: Center(
-            child: Text(
-              entry.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 30.0),
+                child: Text(
+                  'Popular this week',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      ],
+              SizedBox(
+                height: 165.0,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: movies.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index >= movies.length) {
+                      return Container(); // Return an empty container if the index is out of bounds
+                    }
+                    final Movie movie = movies[index];
+
+                    return GestureDetector(
+                        onTap: () {
+                          // Handle onTap if needed
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8.0),
+                          height: 130,
+                          width: 130,
+                          decoration: BoxDecoration(
+                            color: Colors.grey, // Replace with your color
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                                color: Colors.white.withAlpha(40), width: 4.0),
+                            image: DecorationImage(
+                              image: NetworkImage(movie.posterPath),
+                              fit: BoxFit
+                                  .cover, // This will maintain the aspect ratio and fit the image inside the circle
+                            ),
+                          ),
+                        ));
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
-
-class DummyEntry {
-  final String name;
-
-  DummyEntry({required this.name});
-}
-
-final List<DummyEntry> dummyData = [
-  DummyEntry(name: 'Movie 1'),
-  DummyEntry(name: 'Movie 2'),
-  DummyEntry(name: 'Movie 3'),
-  // Add more dummy data entries if needed
-];

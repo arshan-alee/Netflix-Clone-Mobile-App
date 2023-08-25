@@ -10,9 +10,9 @@ class Api {
   static final String _popularUrl =
       'https://api.themoviedb.org/3/movie/popular?api_key=${Constants.api_key}';
   static final String _nowPlayingUrl =
-      'https://api.themoviedb.org/3/movie/now_playing?api_key={$Constants.api_key}';
+      'https://api.themoviedb.org/3/movie/now_playing?api_key=${Constants.api_key}';
   static final String _upcomingUrl =
-      'https://api.themoviedb.org/3/movie/upcoming?api_key={$Constants.api_key}';
+      'https://api.themoviedb.org/3/movie/upcoming?api_key=${Constants.api_key}';
 
   static Future<List<Movie>> getTrendingMovies(int pageCount) async {
     List<Movie> trendingMovies = [];
@@ -21,14 +21,14 @@ class Api {
       final moviesResponse =
           await http.get(Uri.parse('${_trendingUrl}&page=${page}'));
       final moviesData = json.decode(moviesResponse.body)['results'] as List;
-      print(moviesData);
+      print("movie data for page${page}:  ${moviesData}");
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
         trendingMovies.add(movie);
-        print('printing movie data ${movie}');
+        // print('printing movie data ${movie}');
       }
     }
-
+    // print(trendingMovies);
     return trendingMovies;
   }
 
@@ -37,16 +37,17 @@ class Api {
 
     for (int page = 1; page <= pageCount; page++) {
       final moviesResponse =
-          await http.get(Uri.parse('$_nowPlayingUrl&page=$page'));
+          await http.get(Uri.parse('${_nowPlayingUrl}&page=${page}'));
 
-      final moviesData = json.decode(moviesResponse.body)['results'];
+      final moviesData = json.decode(moviesResponse.body)['results'] as List;
+      print("movie data for page${page}:  ${moviesData}");
 
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
         nowPlayingMovies.add(movie);
       }
     }
-
+    print(nowPlayingMovies);
     return nowPlayingMovies;
   }
 
@@ -55,9 +56,9 @@ class Api {
 
     for (int page = 1; page <= pageCount; page++) {
       final moviesResponse =
-          await http.get(Uri.parse('$_popularUrl&page=$page'));
+          await http.get(Uri.parse('${_popularUrl}&page=${page}'));
 
-      final moviesData = json.decode(moviesResponse.body)['results'];
+      final moviesData = json.decode(moviesResponse.body)['results'] as List;
 
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
@@ -73,9 +74,9 @@ class Api {
 
     for (int page = 1; page <= pageCount; page++) {
       final moviesResponse =
-          await http.get(Uri.parse('$_trendingUrl&page=$page'));
+          await http.get(Uri.parse('${_upcomingUrl}&page=${page}'));
 
-      final moviesData = json.decode(moviesResponse.body)['results'];
+      final moviesData = json.decode(moviesResponse.body)['results'] as List;
 
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
@@ -106,59 +107,36 @@ class Api {
       ),
     ]);
     final movieResponse = json.decode(responses[0].body);
-    print('Movie Response status code: ${responses[0].statusCode}');
-    print('Movie Response body: ${responses[0].body}');
+    // print('Movie Response status code: ${responses[0].statusCode}');
+    // print('Movie Response body: ${responses[0].body}');
 
     final movieKeywordsResponse = json.decode(responses[1].body);
-    print('Keyword Response status code: ${responses[1].statusCode}');
-    print('Keyword Response body: ${responses[1].body}');
+    // print('Keyword Response status code: ${responses[1].statusCode}');
+    // print('Keyword Response body: ${responses[1].body}');
 
     final movieCastResponse = json.decode(responses[2].body);
-    print('Cast Response status code: ${responses[2].statusCode}');
-    print('Cast Response body: ${responses[2].body}');
+    // print('Cast Response status code: ${responses[2].statusCode}');
+    // print('Cast Response body: ${responses[2].body}');
 
     final posterPath = movieData['poster_path'];
     final backdropPath = movieData['backdrop_path'];
 
-    final posterPathUrl =
-        'https://image.tmdb.org/t/p/original${posterPath.startsWith('/') ? posterPath : '/' + posterPath}';
+    final posterPathUrl = 'https://image.tmdb.org/t/p/original${posterPath}';
     final backdropPathUrl =
-        'https://image.tmdb.org/t/p/original${backdropPath.startsWith('/') ? backdropPath : '/' + backdropPath}';
+        'https://image.tmdb.org/t/p/original${backdropPath}';
 
-    // final cast = (movieCastResponse['cast'] as List<Map<String, dynamic>>)
-    //     .take(5)
-    //     .toList()
-    //   ..sort((a, b) =>
-    //       (b['popularity'] as double).compareTo(a['popularity'] as double));
-    final cast = (movieCastResponse['cast'] as List<dynamic>)
-        .take(5)
-        .map((dynamic item) {
-      return {
-        'name': item['name'] as String,
-        'popularity': item['popularity'] as double,
-      };
-    }).toList()
-      ..sort((a, b) =>
-          (b['popularity'] as double).compareTo(a['popularity'] as double));
+    final List<dynamic> cast = movieCastResponse['cast'];
+    cast.sort((a, b) => (a['popularity'] > b['popularity']) ? -1 : 1);
+    cast.removeWhere((c) => cast.indexOf(c) >= 5);
+    final List<String> castNames =
+        cast.map((v) => v['name'] as String).toList();
 
-    final castNames = cast.map((v) => v['name'] as String).toList();
+    final List<dynamic> tagsData = movieKeywordsResponse['keywords'];
+    final List<String> tags = tagsData.map((v) => v['name'] as String).toList();
 
-    final tags = (movieKeywordsResponse['keywords'] as List<dynamic>)
-        .map((dynamic item) => item['name'] as String)
-        .toList();
-
-    final genres = (movieResponse['genres'] as List<dynamic>)
-        .map((dynamic item) => item['name'] as String)
-        .toList();
-
-    // final tags =
-    //     (movieKeywordsResponse['keywords'] as List<Map<String, dynamic>>)
-    //         .map((v) => v['name'] as String)
-    //         .toList();
-
-    // final genres = (movieResponse['genres'] as List<Map<String, dynamic>>)
-    //     .map((v) => v['name'] as String)
-    //     .toList();
+    final List<dynamic> genresData = movieResponse['genres'];
+    final List<String> genres =
+        genresData.map((v) => v['name'] as String).toList();
 
     DateTime releaseDate = DateTime.now();
     try {
@@ -205,3 +183,17 @@ class Api {
   //     throw Exception('Something happened');
   //   }
   // }
+    // final cast = (movieCastResponse['cast'] as List<Map<String, dynamic>>)
+    //     .take(5)
+    //     .toList()
+    //   ..sort((a, b) =>
+    //       (b['popularity'] as double).compareTo(a['popularity'] as double));
+
+    // final tags =
+    //     (movieKeywordsResponse['keywords'] as List<Map<String, dynamic>>)
+    //         .map((v) => v['name'] as String)
+    //         .toList();
+
+    // final genres = (movieResponse['genres'] as List<Map<String, dynamic>>)
+    //     .map((v) => v['name'] as String)
+    //     .toList();

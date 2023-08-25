@@ -17,10 +17,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ScrollController(initialScrollOffset: 0.0);
 
   late Future<List<Movie>> trendingMovies;
+  // late Future<List<Movie>> nowPlayingMovies;
 
   @override
   void initState() {
-    trendingMovies = Api.getTrendingMovies(20);
+    trendingMovies = Api.getTrendingMovies(1);
+    // nowPlayingMovies = Api.getNowPlayingMovies(1);
     _scrollController = ScrollController()
       ..addListener(() {
         setState(() {
@@ -53,19 +55,21 @@ class _HomeScreenState extends State<HomeScreen> {
         controller: _scrollController,
         slivers: [
           SliverToBoxAdapter(
-            child: ContentHeader(),
+            child: ContentHeader(
+              nowPlayingMovies: trendingMovies,
+            ),
           ),
-          const SliverPadding(
+          SliverPadding(
             padding: EdgeInsets.only(top: 20),
             sliver: SliverToBoxAdapter(
-              child: Previews(),
+              child: Previews(trendingMovies: trendingMovies),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.all(10),
               child: ContentList(
-                title: 'Only on PK Netflix',
+                title: 'Only on Netflix',
               ),
             ),
           ),
