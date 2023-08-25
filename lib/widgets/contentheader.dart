@@ -34,7 +34,7 @@ class ContentHeader extends StatelessWidget {
                     end: Alignment.topCenter,
                   ),
                   image: DecorationImage(
-                    image: NetworkImage(movies[13].backDropPath),
+                    image: NetworkImage(movies[14].backDropPath),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -44,7 +44,7 @@ class ContentHeader extends StatelessWidget {
                 child: SizedBox(
                   width: 250,
                   child: Text(
-                    movies[13].title,
+                    movies[14].title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -59,7 +59,7 @@ class ContentHeader extends StatelessWidget {
                 child: SizedBox(
                   width: 250,
                   child: Text(
-                    movies[13].genres.join(" • "),
+                    movies[14].genres.join(" • "),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
