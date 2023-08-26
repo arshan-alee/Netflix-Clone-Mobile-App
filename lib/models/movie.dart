@@ -5,7 +5,7 @@ class Movie {
   String posterPath;
   DateTime releaseDate;
   double voteAverage;
-  int durationMinutes;
+  double durationMinutes;
   String ageRestriction;
   List<String> genres;
   List<String> cast;
@@ -26,23 +26,23 @@ class Movie {
       required this.tags,
       required this.trendingIndex});
 
-//   @override
-//   String toString() {
-//     return '''
-// Title: $title
-// Backdrop Path: $backDropPath
-// Overview: $overview
-// Poster Path: $posterPath
-// Release Date: $releaseDate
-// Vote Average: $voteAverage
-// Duration Minutes: $durationMinutes
-// Age Restriction: $ageRestriction
-// Genres: ${genres.join(', ')}
-// Cast: ${cast.join(', ')}
-// Tags: ${tags.join(', ')}
-// Trending Index: $trendingIndex
-// ''';
-//   }
+  @override
+  String toString() {
+    return '''
+Title: $title
+Backdrop Path: $backDropPath
+Overview: $overview
+Poster Path: $posterPath
+Release Date: $releaseDate
+Vote Average: $voteAverage
+Duration Minutes: $durationMinutes
+Age Restriction: $ageRestriction
+Genres: ${genres.join(', ')}
+Cast: ${cast.join(', ')}
+Tags: ${tags.join(', ')}
+Trending Index: $trendingIndex
+''';
+  }
 
   // factory Movie.fromJson(Map<String, dynamic> json) {
   //   // Convert genre IDs to corresponding genre names

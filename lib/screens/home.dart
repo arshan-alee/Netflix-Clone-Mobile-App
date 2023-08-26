@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     upComingMovies = Api.getUpcomingMovies(1);
     nowPlayingMovies = Api.getNowPlayingMovies(1);
     popularMovies = Api.getPopularMovies(1);
-    topRatedMovies = Api.getTopRatedMovies(1);
+    topRatedMovies = Api.getTopRatedMovies(2);
     _scrollController = ScrollController()
       ..addListener(() {
         setState(() {
@@ -65,25 +65,19 @@ class _HomeScreenState extends State<HomeScreen> {
               nowPlayingMovies: trendingMovies,
             ),
           ),
-          SliverPadding(
-            padding: EdgeInsets.only(top: 20),
-            sliver: SliverToBoxAdapter(
-              child: Previews(trendingMovies: popularMovies),
-            ),
-          ),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.all(10),
               child: ContentList(
-                title: 'Only on Netflix',
-                movies: trendingMovies,
+                title: 'Popular on Netflix',
+                movies: nowPlayingMovies,
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: ContentList(
-              title: 'New releases',
-              movies: nowPlayingMovies,
+              title: 'Trending Now',
+              movies: trendingMovies,
             ),
           ),
           SliverPadding(
@@ -100,6 +94,96 @@ class _HomeScreenState extends State<HomeScreen> {
             sliver: SliverToBoxAdapter(
               child: ContentList(
                 title: 'Top Rated',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top 10 movies in Pakistan Today',
+                movies: nowPlayingMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Comedies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Binge-worthy US TV Shows',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Watch in One Weekend',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Romantic Movies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'US TV Action & Adventure',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'International TV Shows',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top 20 TV Shows in Paksitan Today',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Sci-Fi & Fantasy Movies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'TV Comedies',
                 movies: topRatedMovies,
               ),
             ),

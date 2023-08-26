@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/movie.dart';
 
 class Previews extends StatelessWidget {
-  final Future<List<Movie>> trendingMovies;
+  final Future<List<Movie>> movies;
 
-  Previews({Key? key, required this.trendingMovies}) : super(key: key);
+  Previews({Key? key, required this.movies}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Movie>>(
-      future: trendingMovies,
+      future: movies,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show a loading indicator while waiting

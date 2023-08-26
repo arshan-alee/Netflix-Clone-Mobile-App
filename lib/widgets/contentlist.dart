@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/screens/detailscreen.dart';
 
 class ContentList extends StatelessWidget {
   final String title;
@@ -48,7 +49,11 @@ class ContentList extends StatelessWidget {
                       final Movie movie = movies[index];
                       return GestureDetector(
                         onTap: () {
-                          // Handle onTap if needed
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: ((context) =>
+                                      DetailsScreen(movie: movie))));
                         },
                         child: Container(
                             height: 100,
@@ -69,22 +74,3 @@ class ContentList extends StatelessWidget {
         });
   }
 }
-
-class DummyEntry {
-  final String imageUrl;
-
-  DummyEntry({required this.imageUrl});
-}
-
-final List<DummyEntry> dummyContentList = [
-  DummyEntry(
-      imageUrl:
-          'https://cosmicbook.news/images1/batman-robert-pattinson-poster-dc-fandome-2.jpg'),
-  DummyEntry(
-      imageUrl:
-          'https://cosmicbook.news/images1/batman-robert-pattinson-poster-dc-fandome-2.jpg'),
-  DummyEntry(
-      imageUrl:
-          'https://cosmicbook.news/images1/batman-robert-pattinson-poster-dc-fandome-2.jpg'),
-  // Add more dummy entries with image URLs
-];

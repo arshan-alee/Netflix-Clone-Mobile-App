@@ -106,17 +106,17 @@ class ContentHeader extends StatelessWidget {
   }
 }
 
-class DummyEntry {
-  final String name;
-  final String tags;
+// class DummyEntry {
+//   final String name;
+//   final String tags;
 
-  DummyEntry({
-    required this.name,
-    required this.tags,
-  });
-}
+//   DummyEntry({
+//     required this.name,
+//     required this.tags,
+//   });
+// }
 
-final DummyEntry dummyFeatured = DummyEntry(
-  name: 'Dummy Movie',
-  tags: 'Action, Adventure',
-);
+// final DummyEntry dummyFeatured = DummyEntry(
+//   name: 'Dummy Movie',
+//   tags: 'Action, Adventure',
+// );

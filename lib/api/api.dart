@@ -98,13 +98,14 @@ class Api {
           await http.get(Uri.parse('${_upcomingUrl}&page=${page}'));
 
       final moviesData = json.decode(moviesResponse.body)['results'] as List;
+      print("movie data for page${page}:  ${moviesData}");
 
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
         upcomingMovies.add(movie);
       }
     }
-
+    print(upcomingMovies);
     return upcomingMovies;
   }
 
@@ -174,14 +175,13 @@ class Api {
       backDropPath: backdropPathUrl,
       posterPath: posterPathUrl,
       releaseDate: releaseDate,
-      durationMinutes:
-          movieResponse['runtime'] != null ? movieResponse['runtime'] : 1,
+      durationMinutes: (movieResponse['runtime'] ?? 1).toDouble(),
       ageRestriction: movieData['adult'] ? '18+' : '13+',
-      trendingIndex: movieData['popularity'],
+      trendingIndex: (movieData['popularity'] ?? 0).toDouble(),
       genres: genres,
       tags: tags,
       cast: castNames,
-      voteAverage: movieData['vote_average'],
+      voteAverage: (movieData['vote_average'] ?? 0).toDouble(),
     );
   }
 }
