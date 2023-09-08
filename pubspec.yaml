@@ -37,10 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider:
   fluro:
-  appwrite:
   shared_preferences:
   http:
   intl:
+  firebase_auth:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:
