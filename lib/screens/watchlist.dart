@@ -1,14 +1,38 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:pknetflix/data/entry.dart';
-import 'package:pknetflix/providers/entry.dart';
-
 import 'package:provider/provider.dart';
 
-import '../providers/watchlist.dart';
-import '../widgets/buttons/icon.dart';
-import 'details.dart';
+class Entry {
+  final String name;
+  final String description;
+
+  Entry({required this.name, required this.description});
+}
+
+class WatchListProvider {
+  List<Entry> watchlist = [
+    Entry(name: "Movie 1", description: "Description for Movie 1"),
+    Entry(name: "Movie 2", description: "Description for Movie 2"),
+    Entry(name: "Movie 3", description: "Description for Movie 3"),
+  ];
+
+  Future<List<Entry>> list() async {
+    await Future.delayed(Duration(seconds: 2)); // Simulate loading delay
+    return watchlist;
+  }
+
+  void remove(Entry entry) {
+    watchlist.remove(entry);
+  }
+}
+
+class EntryProvider {
+  Future<Uint8List> imageFor(Entry entry) async {
+    await Future.delayed(Duration(seconds: 2)); // Simulate loading delay
+    // You can return a placeholder image or null here for simplicity
+    return Uint8List(0);
+  }
+}
 
 class WatchlistScreen extends StatefulWidget {
   const WatchlistScreen({Key? key}) : super(key: key);
@@ -33,21 +57,12 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FutureBuilder<Uint8List>(
-          future: context.read<EntryProvider>().imageFor(entry),
-          builder: (context, snapshot) =>
-              snapshot.hasData && snapshot.data != null
-                  ? Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.contain,
-                          image: Image.memory(snapshot.data!).image,
-                        ),
-                      ),
-                    )
-                  : Container(),
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.blueGrey, // Placeholder color
+          ),
         ),
         const SizedBox(
           width: 10,
@@ -76,12 +91,12 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
         )),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 20, 30, 20),
-          child: VerticalIconButton(
-              icon: Icons.delete,
-              title: '',
-              tap: () {
-                context.read<WatchListProvider>().remove(entry);
-              }),
+          child: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              context.read<WatchListProvider>().remove(entry);
+            },
+          ),
         ),
       ],
     );
@@ -90,37 +105,64 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: const Text('Watchlist'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: const Text('Watchlist'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+      body: FutureBuilder<List<Entry>>(
+        future: context.read<WatchListProvider>().list(),
+        builder: (context, snapshot) {
+          return snapshot.hasData == false || snapshot.data == null
+              ? const Padding(
+                  padding: EdgeInsets.all(60),
+                  child: Center(child: CircularProgressIndicator()))
+              : ListView(
+                  children: snapshot.data!
+                      .map(
+                        (entry) => GestureDetector(
+                          child: _row(entry),
+                          onTap: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (context) => DetailsScreen(entry: entry),
+                            );
+                          },
+                        ),
+                      )
+                      .toList(),
+                );
+        },
+      ),
+    );
+  }
+}
+
+class DetailsScreen extends StatelessWidget {
+  final Entry entry;
+
+  const DetailsScreen({required this.entry});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(entry.name),
+      content: Text(entry.description),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Close'),
         ),
-        body: FutureBuilder<List<Entry>>(
-            future: context.read<WatchListProvider>().list(),
-            builder: (context, snapshot) {
-              return snapshot.hasData == false || snapshot.data == null
-                  ? const Padding(
-                      padding: EdgeInsets.all(60),
-                      child: Center(child: CircularProgressIndicator()))
-                  : ListView(
-                      children: snapshot.data!
-                          .map((entry) => GestureDetector(
-                              child: _row(entry),
-                              onTap: () async {
-                                await showDialog(
-                                    context: context,
-                                    builder: (context) =>
-                                        DetailsScreen(entry: entry));
-                              }))
-                          .toList(),
-                    );
-            }));
+      ],
+    );
   }
 }
