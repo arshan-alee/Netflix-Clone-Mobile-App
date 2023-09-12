@@ -185,36 +185,3 @@ class Api {
     );
   }
 }
-
-  // Future<List<Movie>> getTrendingMovies(int pageCount) async {
-  //   try {
-  //     final response = await http.get(Uri.parse(_trendingUrl));
-  //     print('Response status code: ${response.statusCode}');
-  //     print('Response body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final decodedData = json.decode(response.body)['results'] as List;
-  //       print(decodedData);
-  //       return decodedData.map((movie) => Movie.fromJson(movie)).toList();
-  //     } else {
-  //       throw Exception('Request failed with status: ${response.statusCode}');
-  //     }
-  //   } catch (error) {
-  //     print('Error during API request: $error');
-  //     throw Exception('Something happened');
-  //   }
-  // }
-    // final cast = (movieCastResponse['cast'] as List<Map<String, dynamic>>)
-    //     .take(5)
-    //     .toList()
-    //   ..sort((a, b) =>
-    //       (b['popularity'] as double).compareTo(a['popularity'] as double));
-
-    // final tags =
-    //     (movieKeywordsResponse['keywords'] as List<Map<String, dynamic>>)
-    //         .map((v) => v['name'] as String)
-    //         .toList();
-
-    // final genres = (movieResponse['genres'] as List<Map<String, dynamic>>)
-    //     .map((v) => v['name'] as String)
-    //     .toList();
