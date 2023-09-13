@@ -30,7 +30,7 @@ class Api {
         // print('printing movie data ${movie}');
       }
     }
-    // print(trendingMovies);
+    print('trendingMovies: $trendingMovies');
     return trendingMovies;
   }
 
@@ -49,7 +49,7 @@ class Api {
         nowPlayingMovies.add(movie);
       }
     }
-    print(nowPlayingMovies);
+    print('nowPlayingMovies: $nowPlayingMovies');
     return nowPlayingMovies;
   }
 
@@ -68,7 +68,7 @@ class Api {
         topRatedMovies.add(movie);
       }
     }
-    print(topRatedMovies);
+    print('topRatedMovies: $topRatedMovies');
     return topRatedMovies;
   }
 
@@ -86,7 +86,7 @@ class Api {
         popularMovies.add(movie);
       }
     }
-
+    print('popularMovies: $popularMovies');
     return popularMovies;
   }
 
@@ -105,7 +105,7 @@ class Api {
         upcomingMovies.add(movie);
       }
     }
-    print(upcomingMovies);
+    print('upcoming movies: $upcomingMovies');
     return upcomingMovies;
   }
 

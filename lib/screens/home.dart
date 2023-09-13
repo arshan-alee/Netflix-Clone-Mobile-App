@@ -20,14 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> upComingMovies;
   late Future<List<Movie>> nowPlayingMovies;
   late Future<List<Movie>> topRatedMovies;
-  late Future<List<Movie>> popularMovies;
+  // late Future<List<Movie>> popularMovies;
 
   @override
   void initState() {
     trendingMovies = Api.getTrendingMovies(1);
     upComingMovies = Api.getUpcomingMovies(1);
     nowPlayingMovies = Api.getNowPlayingMovies(1);
-    popularMovies = Api.getPopularMovies(1);
+    // popularMovies = Api.getPopularMovies(1);
     topRatedMovies = Api.getTopRatedMovies(2);
     _scrollController = ScrollController()
       ..addListener(() {
