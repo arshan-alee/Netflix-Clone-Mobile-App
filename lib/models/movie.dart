@@ -1,4 +1,5 @@
 class Movie {
+  String id;
   String title;
   String backDropPath;
   String overview;
@@ -12,23 +13,44 @@ class Movie {
   List<String> tags;
   double trendingIndex;
 
-  Movie(
-      {required this.title,
-      required this.backDropPath,
-      required this.overview,
-      required this.posterPath,
-      required this.releaseDate,
-      required this.voteAverage,
-      required this.durationMinutes,
-      required this.ageRestriction,
-      required this.genres,
-      required this.cast,
-      required this.tags,
-      required this.trendingIndex});
+  Movie({
+    required this.id,
+    required this.title,
+    required this.backDropPath,
+    required this.overview,
+    required this.posterPath,
+    required this.releaseDate,
+    required this.voteAverage,
+    required this.durationMinutes,
+    required this.ageRestriction,
+    required this.genres,
+    required this.cast,
+    required this.tags,
+    required this.trendingIndex,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'backDropPath': backDropPath,
+      'overview': overview,
+      'posterPath': posterPath,
+      'releaseDate': releaseDate.toUtc(),
+      'voteAverage': voteAverage,
+      'durationMinutes': durationMinutes,
+      'ageRestriction': ageRestriction,
+      'genres': genres,
+      'cast': cast,
+      'tags': tags,
+      'trendingIndex': trendingIndex,
+    };
+  }
 
   @override
   String toString() {
     return '''
+ID : $id
 Title: $title
 Backdrop Path: $backDropPath
 Overview: $overview
@@ -43,6 +65,7 @@ Tags: ${tags.join(', ')}
 Trending Index: $trendingIndex
 ''';
   }
+}
 
   // factory Movie.fromJson(Map<String, dynamic> json) {
   //   // Convert genre IDs to corresponding genre names
@@ -66,7 +89,7 @@ Trending Index: $trendingIndex
   //     // durationMinutes: json['runtime'],
   //   );
   // }
-}
+// }
 
 // final Map<String, int> _genre = {
 //   'Action': 28,
