@@ -170,6 +170,7 @@ class Api {
     }
 
     return Movie(
+      id: movieData['id'].toString(),
       title: movieData['title'],
       overview: movieData['overview'],
       backDropPath: backdropPathUrl,
