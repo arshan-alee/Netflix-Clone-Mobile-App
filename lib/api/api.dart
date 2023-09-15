@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:netflix_clone/constants.dart';
 import 'package:netflix_clone/models/movie.dart';
 import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Api {
   static final String _trendingUrl =
@@ -16,97 +17,80 @@ class Api {
   static final String _upcomingUrl =
       'https://api.themoviedb.org/3/movie/upcoming?api_key=${Constants.api_key}';
 
-  static Future<List<Movie>> getTrendingMovies(int pageCount) async {
-    List<Movie> trendingMovies = [];
+  static final CollectionReference trendingCollection =
+      FirebaseFirestore.instance.collection('trendingMovies');
+  static final CollectionReference nowPlayingCollection =
+      FirebaseFirestore.instance.collection('nowPlayingMovies');
+  static final CollectionReference topRatedCollection =
+      FirebaseFirestore.instance.collection('topRatedMovies');
+  static final CollectionReference popularCollection =
+      FirebaseFirestore.instance.collection('popularMovies');
+  static final CollectionReference upcomingCollection =
+      FirebaseFirestore.instance.collection('upcomingMovies');
 
-    for (int page = 1; page <= pageCount; page++) {
-      final moviesResponse =
-          await http.get(Uri.parse('${_trendingUrl}&page=${page}'));
-      final moviesData = json.decode(moviesResponse.body)['results'] as List;
-      print("movie data for page${page}:  ${moviesData}");
-      for (final movieData in moviesData) {
-        final movie = await _fetchMovieDetails(movieData);
-        trendingMovies.add(movie);
-        // print('printing movie data ${movie}');
-      }
-    }
-    print('trendingMovies: $trendingMovies');
+  static Future<List<Movie>> getTrendingMovies(int pageCount) async {
+    List<Movie> trendingMovies =
+        await _fetchMoviesFromApi(_trendingUrl, pageCount);
+    await _updateFirestoreCollection(trendingCollection, trendingMovies);
     return trendingMovies;
   }
 
   static Future<List<Movie>> getNowPlayingMovies(int pageCount) async {
-    List<Movie> nowPlayingMovies = [];
-
-    for (int page = 1; page <= pageCount; page++) {
-      final moviesResponse =
-          await http.get(Uri.parse('${_nowPlayingUrl}&page=${page}'));
-
-      final moviesData = json.decode(moviesResponse.body)['results'] as List;
-      print("movie data for page${page}:  ${moviesData}");
-
-      for (final movieData in moviesData) {
-        final movie = await _fetchMovieDetails(movieData);
-        nowPlayingMovies.add(movie);
-      }
-    }
-    print('nowPlayingMovies: $nowPlayingMovies');
+    List<Movie> nowPlayingMovies =
+        await _fetchMoviesFromApi(_nowPlayingUrl, pageCount);
+    await _updateFirestoreCollection(nowPlayingCollection, nowPlayingMovies);
     return nowPlayingMovies;
   }
 
   static Future<List<Movie>> getTopRatedMovies(int pageCount) async {
-    List<Movie> topRatedMovies = [];
-
-    for (int page = 1; page <= pageCount; page++) {
-      final moviesResponse =
-          await http.get(Uri.parse('${_topRatedUrl}&page=${page}'));
-
-      final moviesData = json.decode(moviesResponse.body)['results'] as List;
-      print("movie data for page${page}:  ${moviesData}");
-
-      for (final movieData in moviesData) {
-        final movie = await _fetchMovieDetails(movieData);
-        topRatedMovies.add(movie);
-      }
-    }
-    print('topRatedMovies: $topRatedMovies');
+    List<Movie> topRatedMovies =
+        await _fetchMoviesFromApi(_topRatedUrl, pageCount);
+    await _updateFirestoreCollection(topRatedCollection, topRatedMovies);
     return topRatedMovies;
   }
 
   static Future<List<Movie>> getPopularMovies(int pageCount) async {
-    List<Movie> popularMovies = [];
-
-    for (int page = 1; page <= pageCount; page++) {
-      final moviesResponse =
-          await http.get(Uri.parse('${_popularUrl}&page=${page}'));
-
-      final moviesData = json.decode(moviesResponse.body)['results'] as List;
-
-      for (final movieData in moviesData) {
-        final movie = await _fetchMovieDetails(movieData);
-        popularMovies.add(movie);
-      }
-    }
-    print('popularMovies: $popularMovies');
+    List<Movie> popularMovies =
+        await _fetchMoviesFromApi(_popularUrl, pageCount);
+    await _updateFirestoreCollection(popularCollection, popularMovies);
     return popularMovies;
   }
 
   static Future<List<Movie>> getUpcomingMovies(int pageCount) async {
-    List<Movie> upcomingMovies = [];
+    List<Movie> upcomingMovies =
+        await _fetchMoviesFromApi(_upcomingUrl, pageCount);
+    await _updateFirestoreCollection(upcomingCollection, upcomingMovies);
+    return upcomingMovies;
+  }
+
+  static Future<List<Movie>> _fetchMoviesFromApi(
+      String apiUrl, int pageCount) async {
+    List<Movie> movies = [];
 
     for (int page = 1; page <= pageCount; page++) {
-      final moviesResponse =
-          await http.get(Uri.parse('${_upcomingUrl}&page=${page}'));
-
+      final moviesResponse = await http.get(Uri.parse('$apiUrl&page=$page'));
       final moviesData = json.decode(moviesResponse.body)['results'] as List;
-      print("movie data for page${page}:  ${moviesData}");
+      print("movie data for page $page: $moviesData");
 
       for (final movieData in moviesData) {
         final movie = await _fetchMovieDetails(movieData);
-        upcomingMovies.add(movie);
+        movies.add(movie);
       }
     }
-    print('upcoming movies: $upcomingMovies');
-    return upcomingMovies;
+
+    return movies;
+  }
+
+  static Future<void> _updateFirestoreCollection(
+      CollectionReference collection, List<Movie> movies) async {
+    for (var movie in movies) {
+      try {
+        final movieMap = movie.toMap();
+        await collection.doc(movie.id.toString()).set(movieMap);
+      } catch (error) {
+        print('Error updating Firestore: $error');
+      }
+    }
   }
 
   static Future<Movie> _fetchMovieDetails(
