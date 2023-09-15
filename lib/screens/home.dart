@@ -20,14 +20,14 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> upComingMovies;
   late Future<List<Movie>> nowPlayingMovies;
   late Future<List<Movie>> topRatedMovies;
-  // late Future<List<Movie>> popularMovies;
+  late Future<List<Movie>> popularMovies;
 
   @override
   void initState() {
     trendingMovies = Api.getTrendingMovies(1);
     upComingMovies = Api.getUpcomingMovies(1);
     nowPlayingMovies = Api.getNowPlayingMovies(1);
-    // popularMovies = Api.getPopularMovies(1);
+    popularMovies = Api.getPopularMovies(1);
     topRatedMovies = Api.getTopRatedMovies(2);
     _scrollController = ScrollController()
       ..addListener(() {
@@ -57,149 +57,138 @@ class _HomeScreenState extends State<HomeScreen> {
           scrollOffset: _scrollOffset,
         ),
       ),
-      // body: CustomScrollView(
-      //   controller: _scrollController,
-      //   slivers: [
-      //     SliverToBoxAdapter(
-      //       child: ContentHeader(
-      //         nowPlayingMovies: trendingMovies,
-      //       ),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: Container(
-      //         padding: const EdgeInsets.all(10),
-      //         child: ContentList(
-      //           title: 'Popular on Netflix',
-      //           movies: nowPlayingMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverToBoxAdapter(
-      //       child: ContentList(
-      //         title: 'Trending Now',
-      //         movies: trendingMovies,
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Upcoming',
-      //           movies: upComingMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Top Rated',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Top 10 movies in Pakistan Today',
-      //           movies: nowPlayingMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Comedies',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Binge-worthy US TV Shows',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Watch in One Weekend',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Romantic Movies',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'US TV Action & Adventure',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'International TV Shows',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Top 20 TV Shows in Paksitan Today',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'Sci-Fi & Fantasy Movies',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //     SliverPadding(
-      //       padding: const EdgeInsets.only(bottom: 20),
-      //       sliver: SliverToBoxAdapter(
-      //         child: ContentList(
-      //           title: 'TV Comedies',
-      //           movies: topRatedMovies,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+      body: CustomScrollView(
+        controller: _scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: ContentHeader(
+              nowPlayingMovies: upComingMovies,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              child: ContentList(
+                title: 'Popular on Netflix',
+                movies: nowPlayingMovies,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ContentList(
+              title: 'Trending Now',
+              movies: trendingMovies,
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Upcoming',
+                movies: upComingMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top Rated',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top 10 movies in Pakistan Today',
+                movies: nowPlayingMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Comedies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Binge-worthy US TV Shows',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Watch in One Weekend',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Romantic Movies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'US TV Action & Adventure',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'International TV Shows',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Top 20 TV Shows in Paksitan Today',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'Sci-Fi & Fantasy Movies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 20),
+            sliver: SliverToBoxAdapter(
+              child: ContentList(
+                title: 'TV Comedies',
+                movies: topRatedMovies,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
-}
-
-class DummyEntry {
-  final String name;
-  final String tags;
-
-  DummyEntry({
-    required this.name,
-    required this.tags,
-  });
 }

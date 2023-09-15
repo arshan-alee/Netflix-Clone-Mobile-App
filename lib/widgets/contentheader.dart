@@ -22,11 +22,11 @@ class ContentHeader extends StatelessWidget {
             List<Movie> movies = snapshot.data!;
             return Stack(alignment: Alignment.center, children: [
               Container(
-                height: 500,
+                height: 470,
                 color: Colors.blue, // Replace with your desired color
               ),
               Container(
-                height: 500,
+                height: 470,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [Colors.black, Colors.transparent],
@@ -34,7 +34,7 @@ class ContentHeader extends StatelessWidget {
                     end: Alignment.topCenter,
                   ),
                   image: DecorationImage(
-                      image: NetworkImage(movies[14].backDropPath),
+                      image: NetworkImage(movies[8].backDropPath),
                       fit: BoxFit.cover,
                       filterQuality: FilterQuality.high),
                 ),
@@ -44,7 +44,7 @@ class ContentHeader extends StatelessWidget {
                 child: SizedBox(
                   width: 250,
                   child: Text(
-                    movies[14].title,
+                    movies[8].title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -59,7 +59,7 @@ class ContentHeader extends StatelessWidget {
                 child: SizedBox(
                   width: 250,
                   child: Text(
-                    movies[14].genres.join(" • "),
+                    movies[8].genres.join(" • "),
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Movie {
   String id;
   String title;
@@ -45,6 +47,57 @@ class Movie {
       'tags': tags,
       'trendingIndex': trendingIndex,
     };
+  }
+
+  factory Movie.fromMap(Map<String, dynamic> map) {
+    try {
+      return Movie(
+        id: map['id'] as String ?? '',
+        title: map['title'] as String ?? '',
+        backDropPath: map['backDropPath'] as String ?? '',
+        overview: map['overview'] as String ?? '',
+        posterPath: map['posterPath'] as String ?? '',
+        releaseDate: map['releaseDate'] != null
+            ? (map['releaseDate'] as Timestamp).toDate()
+            : DateTime.now(),
+        voteAverage: map['voteAverage'] != null
+            ? (map['voteAverage'] as num).toDouble()
+            : 0.0,
+        durationMinutes: map['durationMinutes'] != null
+            ? (map['durationMinutes'] as num).toDouble()
+            : 0.0,
+        ageRestriction: map['ageRestriction'] as String ?? '',
+        genres: map['genres'] != null
+            ? List<String>.from(map['genres'] as List<dynamic>)
+            : [],
+        cast: map['cast'] != null
+            ? List<String>.from(map['cast'] as List<dynamic>)
+            : [],
+        tags: map['tags'] != null
+            ? List<String>.from(map['tags'] as List<dynamic>)
+            : [],
+        trendingIndex: map['trendingIndex'] != null
+            ? (map['trendingIndex'] as num).toDouble()
+            : 0.0,
+      );
+    } catch (error) {
+      print('Error parsing Movie data: $error');
+      return Movie(
+        id: '',
+        title: '',
+        backDropPath: '',
+        overview: '',
+        posterPath: '',
+        releaseDate: DateTime.now(),
+        voteAverage: 0.0,
+        durationMinutes: 0.0,
+        ageRestriction: '',
+        genres: [],
+        cast: [],
+        tags: [],
+        trendingIndex: 0.0,
+      );
+    }
   }
 
   @override

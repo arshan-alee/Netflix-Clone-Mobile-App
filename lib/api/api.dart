@@ -1,9 +1,8 @@
 import 'dart:convert';
-
-import 'package:netflix_clone/constants.dart';
-import 'package:netflix_clone/models/movie.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:netflix_clone/constants.dart';
+import 'package:netflix_clone/models/movie.dart';
 
 class Api {
   static final String _trendingUrl =
@@ -30,41 +29,55 @@ class Api {
 
   static Future<List<Movie>> getTrendingMovies(int pageCount) async {
     List<Movie> trendingMovies =
-        await _fetchMoviesFromApi(_trendingUrl, pageCount);
+        await _fetchMoviesFromFirestore(trendingCollection);
+    await _clearFirestoreCollection(trendingCollection);
+    trendingMovies = await _fetchMoviesFromApi(_trendingUrl, pageCount);
     await _updateFirestoreCollection(trendingCollection, trendingMovies);
+
     return trendingMovies;
   }
 
   static Future<List<Movie>> getNowPlayingMovies(int pageCount) async {
     List<Movie> nowPlayingMovies =
-        await _fetchMoviesFromApi(_nowPlayingUrl, pageCount);
+        await _fetchMoviesFromFirestore(nowPlayingCollection);
+    await _clearFirestoreCollection(nowPlayingCollection);
+    nowPlayingMovies = await _fetchMoviesFromApi(_nowPlayingUrl, pageCount);
     await _updateFirestoreCollection(nowPlayingCollection, nowPlayingMovies);
+
     return nowPlayingMovies;
   }
 
   static Future<List<Movie>> getTopRatedMovies(int pageCount) async {
     List<Movie> topRatedMovies =
-        await _fetchMoviesFromApi(_topRatedUrl, pageCount);
+        await _fetchMoviesFromFirestore(topRatedCollection);
+    await _clearFirestoreCollection(topRatedCollection);
+    topRatedMovies = await _fetchMoviesFromApi(_topRatedUrl, pageCount);
     await _updateFirestoreCollection(topRatedCollection, topRatedMovies);
+
     return topRatedMovies;
   }
 
   static Future<List<Movie>> getPopularMovies(int pageCount) async {
     List<Movie> popularMovies =
-        await _fetchMoviesFromApi(_popularUrl, pageCount);
+        await _fetchMoviesFromFirestore(popularCollection);
+    await _clearFirestoreCollection(popularCollection);
+    popularMovies = await _fetchMoviesFromApi(_popularUrl, pageCount);
     await _updateFirestoreCollection(popularCollection, popularMovies);
+
     return popularMovies;
   }
 
   static Future<List<Movie>> getUpcomingMovies(int pageCount) async {
     List<Movie> upcomingMovies =
-        await _fetchMoviesFromApi(_upcomingUrl, pageCount);
+        await _fetchMoviesFromFirestore(upcomingCollection);
+    await _clearFirestoreCollection(upcomingCollection);
+    upcomingMovies = await _fetchMoviesFromApi(_upcomingUrl, pageCount);
     await _updateFirestoreCollection(upcomingCollection, upcomingMovies);
+
     return upcomingMovies;
   }
 
-  static Future<List<Movie>> _fetchMoviesFromApi(
-      String apiUrl, int pageCount) async {
+  static Future<List<Movie>> _fetchMoviesFromApi( String apiUrl, int pageCount ) async {
     List<Movie> movies = [];
 
     for (int page = 1; page <= pageCount; page++) {
@@ -93,6 +106,25 @@ class Api {
     }
   }
 
+  static Future<List<Movie>> _fetchMoviesFromFirestore(
+      CollectionReference collection) async {
+    QuerySnapshot querySnapshot = await collection.get();
+    return querySnapshot.docs
+        .map((doc) => Movie.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
+
+  static Future<void> _clearFirestoreCollection(
+      CollectionReference collection) async {
+    // Get all documents in the collection
+    QuerySnapshot querySnapshot = await collection.get();
+
+    // Delete each document
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
+
   static Future<Movie> _fetchMovieDetails(
       Map<String, dynamic> movieData) async {
     final responses = await Future.wait([
@@ -113,16 +145,10 @@ class Api {
       ),
     ]);
     final movieResponse = json.decode(responses[0].body);
-    // print('Movie Response status code: ${responses[0].statusCode}');
-    // print('Movie Response body: ${responses[0].body}');
 
     final movieKeywordsResponse = json.decode(responses[1].body);
-    // print('Keyword Response status code: ${responses[1].statusCode}');
-    // print('Keyword Response body: ${responses[1].body}');
 
     final movieCastResponse = json.decode(responses[2].body);
-    // print('Cast Response status code: ${responses[2].statusCode}');
-    // print('Cast Response body: ${responses[2].body}');
 
     final posterPath = movieData['poster_path'];
     final backdropPath = movieData['backdrop_path'];
@@ -150,8 +176,8 @@ class Api {
       releaseDate = DateTime(
           int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
     } catch (err) {
-      // No date, it's OK
     }
+
 
     return Movie(
       id: movieData['id'].toString(),

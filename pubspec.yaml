@@ -42,9 +42,7 @@ dependencies:
   intl:
   firebase_auth:
   cloud_firestore:
-  firebase_storage:
   firebase_core:
-  path:
 
 
 dev_dependencies:
